@@ -13,14 +13,19 @@ docker_loaded = load_dotenv(dotenv_path=docker_env)
 def _debug_env():
     print(f"[DEBUG] Loaded .env from root: {root_env} -> {root_loaded}")
     print(f"[DEBUG] Loaded .env from docker/: {docker_env} -> {docker_loaded}")
-    print(f"[DEBUG] OPENAI_API_KEY set: {'OPENAI_API_KEY' in os.environ}")
-    print(f"[DEBUG] API_KEY set: {'API_KEY' in os.environ}")
+    print(f"[DEBUG] OPENAI_API_KEY set: {bool(os.environ.get('OPENAI_API_KEY'))}")
+    print(f"[DEBUG] API_KEY set: {bool(os.environ.get('API_KEY'))}")
 _debug_env()
 
 # Set OpenAI API key
 openai.api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("API_KEY")
+
 if not openai.api_key:
-    raise RuntimeError("OpenAI API key not found in environment variables. Please set OPENAI_API_KEY or API_KEY.")
+    if os.environ.get("PYTEST_CURRENT_TEST"):  # allow tests to run without key
+        print("[WARNING] OpenAI API key not found — using test key for CI/testing.")
+        openai.api_key = "test-key"
+    else:
+        raise RuntimeError("OpenAI API key not found in environment variables. Please set OPENAI_API_KEY or API_KEY.")
 
 def generate_llm_output(query: str, context: str) -> str:
     prompt = f"You are a helpful assistant. Use the following context to answer the user's question.\n\nContext:\n{context}\n\nQuestion: {query}\n\nAnswer:"
