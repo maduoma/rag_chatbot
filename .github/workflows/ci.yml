@@ -33,6 +33,17 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
+      # ✅ INSERTED HERE
+      - name: Debug secret injection (no secret value shown)
+        run: |
+          if [ -z "${OPENAI_API_KEY}" ]; then
+            echo "::error::OPENAI_API_KEY is NOT set"
+          else
+            echo "✅ OPENAI_API_KEY is set"
+          fi
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
       - name: Run tests
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
