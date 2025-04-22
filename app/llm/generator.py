@@ -20,9 +20,10 @@ _debug_env()
 # Set OpenAI API key
 openai.api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("API_KEY")
 
+# Fallback for CI/test environments (e.g. GitHub Actions)
 if not openai.api_key:
-    if os.environ.get("PYTEST_CURRENT_TEST"):  # allow tests to run without key
-        print("[WARNING] OpenAI API key not found — using test key for CI/testing.")
+    if os.environ.get("PYTEST_CURRENT_TEST") or os.environ.get("CI") == "true":
+        print("[WARNING] OpenAI API key not found — using test key in CI/testing.")
         openai.api_key = "test-key"
     else:
         raise RuntimeError("OpenAI API key not found in environment variables. Please set OPENAI_API_KEY or API_KEY.")
