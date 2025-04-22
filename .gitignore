@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+venv/
+build/
+dist/
+*.egg-info/
+data/faiss_index/
+data/processed/
+data/raw/
+.DS_Store
+.docker/

@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+flask
+openai==0.28.1
+pydantic
+faiss-cpu
+sentence-transformers
+pytest
+flake8
+python-docx
+pandas
+pdfplumber
